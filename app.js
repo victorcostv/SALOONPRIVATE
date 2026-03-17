@@ -744,7 +744,7 @@ function showSuspenseScreen() {
         const sabotages = state.missionChoices.filter(c => c === false).length;
         const failsRequired = state.config.twoFailsRequired === state.currentMissionIndex ? 2 : 1;
         const willSucceed = sabotages < failsRequired;
-        setTimeout(() => setLight(willSucceed ? 'blue' : 'red'), 600);
+        setTimeout(() => setLight(willSucceed ? 'blue' : 'red'), 900);
         fadeToBlack(() => processMission());
     };
 }
@@ -1353,7 +1353,7 @@ function listenToGameStatus(code) {
                     const mIdx = resultData.missionIndex || 0;
                     const failsRequired = config.twoFailsRequired === mIdx ? 2 : 1;
                     const willSucceed = resultData.sabotages < failsRequired;
-                    setTimeout(() => setLight(willSucceed ? 'blue' : 'red'), 600);
+                    setTimeout(() => setLight(willSucceed ? 'blue' : 'red'), 900);
                     fadeToBlack(() => showOnlineMissionResult(code, resultData));
                 });
             });
