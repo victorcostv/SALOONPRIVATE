@@ -740,7 +740,7 @@ function submitMission(isSuccess) {
 
 function showSuspenseScreen() {
     showScreen('screen-mission-suspense');
-    document.getElementById('btn-reveal-mission-result').onclick = () => processMission();
+    document.getElementById('btn-reveal-mission-result').onclick = () => fadeToBlack(() => processMission());
 }
 
 function processMission() {
@@ -1340,7 +1340,7 @@ function listenToGameStatus(code) {
             });
         } else if (status === 'missionResult') {
             db.ref('rooms/' + code + '/missionResult').once('value').then(resultSnap => {
-                showOnlineMissionResult(code, resultSnap.val());
+                fadeToBlack(() => showOnlineMissionResult(code, resultSnap.val()));
             });
         } else if (status === 'gameover_outlaw') {
             db.ref('rooms/' + code).once('value').then(s => {
