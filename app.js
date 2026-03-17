@@ -758,14 +758,14 @@ function processMission() {
         outcomeH1.innerText  = "Missão Bem-sucedida!";
         outcomeH1.className  = "neon-text blue";
         outcomeLore.innerText = "A operação em Red Rock foi concluída.";
-        setLight('blue'); setTimeout(() => setLight('orange'), 2000);
+        setLight('blue'); setTimeout(() => setLight('orange'), 3000);
     } else {
         AudioManager.playSFX('fail');
         document.body.classList.add('bg-winner-outlaw');
         outcomeH1.innerText  = "Missão Sabotada!";
         outcomeH1.className  = "neon-text red";
         outcomeLore.innerText = "Havia espiões na equipe e a operação falhou!";
-        setLight('red'); setTimeout(() => setLight('orange'), 2000);
+        setLight('red'); setTimeout(() => setLight('orange'), 3000);
     }
 
     document.getElementById('sabotage-number').innerText = sabotages;
@@ -1669,11 +1669,11 @@ function showOnlineMissionResult(code, result) {
         if (missionSuccess) {
             AudioManager.playSFX('success');
             document.body.classList.add('bg-winner-law');
-            setLight('blue'); setTimeout(() => setLight('orange'), 2000);
+            setLight('blue'); setTimeout(() => setLight('orange'), 3000);
         } else {
             AudioManager.playSFX('fail');
             document.body.classList.add('bg-winner-outlaw');
-            setLight('red'); setTimeout(() => setLight('orange'), 2000);
+            setLight('red'); setTimeout(() => setLight('orange'), 3000);
         }
 
         const nextBtn = document.getElementById('online-btn-mission-next');
