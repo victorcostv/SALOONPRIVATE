@@ -740,7 +740,13 @@ function submitMission(isSuccess) {
 
 function showSuspenseScreen() {
     showScreen('screen-mission-suspense');
-    document.getElementById('btn-reveal-mission-result').onclick = () => fadeToBlack(() => processMission());
+    document.getElementById('btn-reveal-mission-result').onclick = () => {
+        const sabotages = state.missionChoices.filter(c => c === false).length;
+        const failsRequired = state.config.twoFailsRequired === state.currentMissionIndex ? 2 : 1;
+        const willSucceed = sabotages < failsRequired;
+        setTimeout(() => setLight(willSucceed ? 'blue' : 'red'), 600);
+        fadeToBlack(() => processMission());
+    };
 }
 
 function processMission() {
@@ -758,14 +764,14 @@ function processMission() {
         outcomeH1.innerText  = "Missão Bem-sucedida!";
         outcomeH1.className  = "neon-text blue";
         outcomeLore.innerText = "A operação em Red Rock foi concluída.";
-        setLight('blue'); setTimeout(() => setLight('orange'), 3000);
+        setTimeout(() => setLight('orange'), 3000);
     } else {
         AudioManager.playSFX('fail');
         document.body.classList.add('bg-winner-outlaw');
         outcomeH1.innerText  = "Missão Sabotada!";
         outcomeH1.className  = "neon-text red";
         outcomeLore.innerText = "Havia espiões na equipe e a operação falhou!";
-        setLight('red'); setTimeout(() => setLight('orange'), 3000);
+        setTimeout(() => setLight('orange'), 3000);
     }
 
     document.getElementById('sabotage-number').innerText = sabotages;
@@ -1340,7 +1346,16 @@ function listenToGameStatus(code) {
             });
         } else if (status === 'missionResult') {
             db.ref('rooms/' + code + '/missionResult').once('value').then(resultSnap => {
-                fadeToBlack(() => showOnlineMissionResult(code, resultSnap.val()));
+                const resultData = resultSnap.val();
+                db.ref('rooms/' + code + '/players').once('value').then(pSnap => {
+                    const pCount = Object.keys(pSnap.val()).length;
+                    const config = GAME_CONFIG[pCount];
+                    const mIdx = resultData.missionIndex || 0;
+                    const failsRequired = config.twoFailsRequired === mIdx ? 2 : 1;
+                    const willSucceed = resultData.sabotages < failsRequired;
+                    setTimeout(() => setLight(willSucceed ? 'blue' : 'red'), 600);
+                    fadeToBlack(() => showOnlineMissionResult(code, resultData));
+                });
             });
         } else if (status === 'gameover_outlaw') {
             db.ref('rooms/' + code).once('value').then(s => {
@@ -1669,11 +1684,11 @@ function showOnlineMissionResult(code, result) {
         if (missionSuccess) {
             AudioManager.playSFX('success');
             document.body.classList.add('bg-winner-law');
-            setLight('blue'); setTimeout(() => setLight('orange'), 3000);
+            setTimeout(() => setLight('orange'), 3000);
         } else {
             AudioManager.playSFX('fail');
             document.body.classList.add('bg-winner-outlaw');
-            setLight('red'); setTimeout(() => setLight('orange'), 3000);
+            setTimeout(() => setLight('orange'), 3000);
         }
 
         const nextBtn = document.getElementById('online-btn-mission-next');
